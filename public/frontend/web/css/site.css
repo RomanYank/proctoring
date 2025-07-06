@@ -1,0 +1,290 @@
+main > .container, main > .container-fluid
+{
+    padding: 70px 15px 20px;
+}
+
+.footer {
+    background-color: #f5f5f5;
+    font-size: .9em;
+    height: 60px;
+}
+
+.footer > .container, .footer > .container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.not-set {
+    color: #c55;
+    font-style: italic;
+}
+
+/* add sorting icons to gridview sort links */
+a.asc:after, a.desc:after {
+    content: '';
+    left: 3px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border: solid 5px transparent;
+    margin: 4px 4px 2px 4px;
+    background: transparent;
+}
+
+a.asc:after {
+    border-bottom: solid 7px #212529;
+    border-top-width: 0;
+}
+
+a.desc:after {
+    border-top: solid 7px #212529;
+    border-bottom-width: 0;
+}
+
+.grid-view th,
+.grid-view td:last-child {
+    white-space: nowrap;
+}
+
+.grid-view .filters input,
+.grid-view .filters select {
+    min-width: 50px;
+}
+
+.hint-block {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+/* align the logout "link" (button in form) of the navbar */
+.navbar form > button.logout {
+    padding-top: 7px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@media(max-width:767px) {
+    .navbar form > button.logout {
+        display:block;
+        text-align: left;
+        width: 100%;
+        padding: 10px 0;
+    }
+}
+
+.navbar form > button.logout:focus,
+.navbar form > button.logout:hover {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.navbar form > button.logout:focus {
+    outline: none;
+}
+
+/* style breadcrumb widget as in previous bootstrap versions */
+.breadcrumb {
+    background-color: var(--bs-gray-200);
+    border-radius: .25rem;
+    padding: .75rem 1rem;
+}
+
+.breadcrumb-item > a
+{
+    text-decoration: none;
+}
+
+.table-employees {
+    width: 100%
+}
+
+.table-employees tr td {padding: 15px; text-align: center;}
+.table-employees tbody tr td {
+    font-weight: 800;
+    font-size: 14px;
+}
+.table-employees tbody tr td svg {
+    width: 25px;
+    height: 25px;
+}
+.table-employees tbody tr:nth-child(odd) {
+    background-color: #212529;
+    font-weight: 800;
+    font-size: 14px;
+    color: #fff;
+}
+
+.table-employees tbody tr:nth-child(odd) td svg g, .table-employees tbody tr:nth-child(odd) td svg path{
+    fill: #fff;
+}
+
+.employee-card {
+    width: max-content;
+    margin: 0 auto;
+}
+.employee-card span {font-weight: 800;}
+
+.button-container {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.button-container .button-add-item {
+    font-size: 16px;
+    font-weight: 800;
+    padding: 15px 30px;
+    background-color: #212529;
+    color: #FFF;
+    border-radius: 5px;
+    text-decoration: none;
+    border: 1px solid;
+}
+
+.button-container .button-add-item:hover {
+    background-color: #fff;
+    border: 1px solid #212529;
+    color: #212529;
+}
+
+.button-container .export-button-items {
+    font-size: 16px;
+    font-weight: 800;
+    padding: 15px 30px;
+    background-color: #f5f5f5;
+    color: #212529;
+    border-radius: 5px;
+    text-decoration: none;
+    border: 1px solid;
+    background-color: #f5f5f5;
+}
+
+.button-container .export-button-items:hover {
+    background-color: #212529;
+    border: 1px solid #f5f5f5;
+    color: #f5f5f5;
+}
+
+.status-ok {color: green !important}
+.proctoring-block {display: none;}
+.btn-give-permisson {
+    display: block;
+    margin: 10px auto;
+    width: max-content;
+}
+.action-container-record {
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+#video-content,  #stream-content {
+    display: block;
+    width: 100%;
+}
+.proctoring-block-allow.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container-1, .container-2 {
+    width: 50%;
+    padding: 15px 20px;
+}
+
+
+.title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 15px;;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.steps-container .step-name .selector{
+    padding: 0 10px;
+    color: #000 !important;
+}
+
+.content-step {display: none;}
+
+.content-step.active {display: block;}
+.container-checkbox {margin-bottom: 15px;}
+
+.step-name.active {color: rgb(0 150 150);}
+
+.next-step, .reset {
+    color: #fff;
+    border: none;
+    background-color:  rgb(0 150 150);
+    padding: 10px 25px;
+}
+
+.prcotroing-give-permission-elements {
+    display: flex;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.prcotroing-give-permission-element {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.prcotroing-give-permission-element-icon {position: relative;}
+.prcotroing-give-permission-element-icon img {
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+}
+
+.prcotroing-give-permission-element-description {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.prcotroing-give-permission-element-loader {
+    display: block;
+    position: absolute;
+    inset-block-start: 0;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    border: 2px solid;
+    border-radius: 50%;
+    border-width: 3px;
+    border-color: transparent;
+}
+.prcotroing-give-permission-element-loader.error {border-color: #f00;}
+.prcotroing-give-permission-element-loader.active {border-color: rgb(0 150 150);}
+.preloader {
+    border-block-start-color: rgb(0 150 150);
+    animation-name: rotation;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+#video_files {display: none;}
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

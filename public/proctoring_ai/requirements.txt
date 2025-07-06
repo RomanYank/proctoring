@@ -1,0 +1,10 @@
+opencv-python
+torch
+torchvision
+ultralytics
+fastapi
+uvicorn
+mediapipe
+pandas
+scikit-learn
+numpy
