@@ -5,7 +5,12 @@ import mediapipe as mp
 class HeadDetectionModel:
     def __init__(self):
         self.mp_face_mesh = mp.solutions.face_mesh
-        self.face_mesh = self.mp_face_mesh.FaceMesh()
+        self.face_mesh = self.mp_face_mesh.FaceMesh(
+            static_image_mode=False,
+            max_num_faces=1,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5
+        )
 
     def get_head_orientation(self, landmarks):
         left_eye = landmarks[33]
@@ -35,9 +40,14 @@ class HeadDetectionModel:
                 else:
                     orientation = "forward"
 
-                # визуализация
-                cv2.putText(annotated_frame, f"Head: {orientation}", (10, 30),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255) if orientation != "forward" else (0, 255, 0), 2)
+                cv2.putText(
+                    annotated_frame,
+                    f"Head: {orientation}",
+                    (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 0, 255) if orientation != "forward" else (0, 255, 0),
+                    2
+                )
 
         return annotated_frame, orientation
-

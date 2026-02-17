@@ -23,7 +23,6 @@ AppAsset::register($this);
     <?php $this->head() ?>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.6.2/RecordRTC.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script defer type="text/javascript" src="/frontend/web/js/main.js"></script>
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
