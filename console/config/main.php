@@ -28,10 +28,9 @@ return [
     'components' => [
         'db' => [
             'class' => \yii\db\Connection::class,
-            'dsn' => 'mysql:host=127.0.0.1;dbname=project_db',
-            'username' => 'root',
-            'password' => 'root',
-            'charset' => 'utf8',
+            'dsn' => 'mysql:host=db;port=3306;dbname=proctoring_db;charset=utf8;ssl-mode=DISABLED',
+            'username' => 'proctoring_user',
+            'password' => 'proctoring_pass',
         ],
         'log' => [
             'targets' => [
@@ -53,7 +52,7 @@ return [
     'controllerMap' => [
         'migrate' => [
             'class' => 'yii\console\controllers\MigrateController',
-            'migrationPath' => null,
+            'migrationPath' => '@console/migrations',
             'migrationNamespaces' => [
                 'yii\queue\db\migrations',
             ],

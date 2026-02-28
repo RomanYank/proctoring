@@ -3,7 +3,7 @@
 return [
     'components' => [
         'db' => [
-            'dsn' => 'mysql:host=127.0.0.1;dbname=project_db',
+            'dsn' => 'mysql:host=db;dbname=proctoring_db;charset=utf8;ssl-mode=DISABLED',
         ],
     ],
 ];

@@ -2,11 +2,10 @@
 return [
     'components' => [
         'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=db;dbname=proctoring_db',
+            'class' => \yii\db\Connection::class,
+            'dsn' => 'mysql:host=db;dbname=proctoring_db;charset=utf8;ssl-mode=DISABLED',
             'username' => 'proctoring_user',
             'password' => 'proctoring_pass',
-            'charset' => 'utf8',
         ],
     ],
 ];

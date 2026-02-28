@@ -4,10 +4,9 @@ return [
     'components' => [
         'db' => [
             'class' => \yii\db\Connection::class,
-            'dsn' => 'mysql:host=127.0.0.1;dbname=project_db',
-            'username' => 'root',
-            'password' => 'root',
-            'charset' => 'utf8',
+            'dsn' => 'mysql:host=db;dbname=proctoring_db;charset=utf8;ssl-mode=DISABLED',
+            'username' => 'proctoring_user',
+            'password' => 'proctoring_pass',
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,

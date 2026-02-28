@@ -1,4 +1,4 @@
-from GazeTracking.gaze_tracking import GazeTracking
+from gaze_tracking import GazeTracking
 #Документация и примеры для GazeTracking https://github.com/antoinelame/GazeTracking
 class GazeDirectionDetectorModel:
     def __init__(self):

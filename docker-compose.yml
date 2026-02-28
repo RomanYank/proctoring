@@ -39,6 +39,8 @@ services:
       MYSQL_DATABASE: proctoring_db
       MYSQL_USER: proctoring_user
       MYSQL_PASSWORD: proctoring_pass
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_SSL_MODE: "DISABLED"
     ports:
       - "3306:3306"
     volumes:
