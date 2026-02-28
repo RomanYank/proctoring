@@ -15,7 +15,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password'], 'required'],
+            [['username', 'password_hash'], 'required'],
         ];
     }
 
@@ -51,7 +51,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function validatePassword($password)
     {
-        return $this->password === md5($password);
+        return $this->password_hash === md5($password);
     }
 
     public function getDepartment()

@@ -80,7 +80,7 @@ $(document).ready(function () {
 
     const fileNameWebCamera = getFileName('WebCamera', 'webm');
     const fileNameCaptureScreen = getFileName('CaptureScreen', 'webm');
-    const recordingTime = <?=$model->recording_time?> * 1000;
+    const recordingTime = <?=$model?->recording_time?> * 1000;
 
     let recorderWeb, recorderCapture, recorderScreen;
     let blobWeb, blobCapture, blobScreen;

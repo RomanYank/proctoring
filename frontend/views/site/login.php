@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label('Логин') ?>
 
-                <?= $form->field($model, 'password')->passwordInput()->label('Пароль')?>
+                <?= $form->field($model, 'password_hash')->passwordInput()->label('Пароль')?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Войти', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>

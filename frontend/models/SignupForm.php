@@ -13,7 +13,7 @@ class SignupForm extends Model
 {
     public $username;
     public $email;
-    public $password;
+    public $password_hash;
 
 
     /**
@@ -33,8 +33,8 @@ class SignupForm extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
-            ['password', 'required'],
-            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+            ['password_hash', 'required'],
+            ['password_hash', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
         ];
     }
 
@@ -52,7 +52,7 @@ class SignupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
-        $user->setPassword($this->password);
+        $user->setPassword($this->password_hash);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
 

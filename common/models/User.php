@@ -59,6 +59,15 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public attributeLabels()
+    {
+        return [
+            'username' => 'Username',
+            'email' => 'Email',
+            'password_hash' => 'Password',
+        ];
+    }
+    
     /**
      * {@inheritdoc}
      */
@@ -167,7 +176,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function validatePassword($password)
     {
         //return Yii::$app->security->validatePassword($password, $this->password_hash);
-        return $this->password === md5($password);
+        return $this->password_hash === md5($password);
     }
 
     /**

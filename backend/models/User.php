@@ -9,7 +9,7 @@ use backend\models\VideoFiles;
  * @property int $id
  * @property string $username
  * @property string $full_name
- * @property string $password
+ * @property string $password_hash
  * @property int $status
  * @property string $auth_key
  * @property int $role
@@ -32,8 +32,8 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'full_name', 'password', 'status', 'auth_key', 'role'], 'required'],
-            [['username', 'full_name', 'password', 'auth_key'], 'string'],
+            [['username', 'full_name', 'password_hash', 'status', 'auth_key', 'role'], 'required'],
+            [['username', 'full_name', 'password_hash', 'auth_key'], 'string'],
             [['status', 'role', 'department_id'], 'integer']
         ];
     }
@@ -47,7 +47,7 @@ class User extends \yii\db\ActiveRecord
             'id' => 'ID',
             'username' => 'Логин',
             'full_name' => 'ФИО',
-            'password' => 'Пароль',
+            'password_hash' => 'Пароль',
             'status' => 'Статус',
             'role' => 'Роль',
             'department_id' => 'ID Организации'

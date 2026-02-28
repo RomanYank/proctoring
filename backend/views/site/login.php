@@ -19,7 +19,7 @@ $this->title = 'Login';
 
             <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+            <?= $form->field($model, 'password_hash')->passwordInput() ?>
 
             <?= $form->field($model, 'rememberMe')->checkbox() ?>
 
