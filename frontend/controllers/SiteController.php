@@ -17,8 +17,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
-#use frontend\models\Employees;
-use frontend\models\Video;
+use common\models\VideoFiles;
 use yii\web\UploadedFile;
 use common\jobs\AnalyzeJob;
 
@@ -332,7 +331,7 @@ class SiteController extends Controller
     }
 
     public function actionSaveVideo() {
-        $model = new Video();
+        $model = new VideoFiles();
         Yii::$app->response->format = Response::FORMAT_JSON;
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();

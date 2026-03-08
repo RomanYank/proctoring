@@ -8,7 +8,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
-use backend\models\VideoFiles;
+use common\models\VideoFiles;
 use yii\data\ActiveDataProvider;
 /**
  * Site controller

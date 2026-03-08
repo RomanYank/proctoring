@@ -3,7 +3,7 @@
 namespace frontend\controllers;
 use Yii;
 use yii\rest\ActiveController;
-use backend\models\VideoFiles;
+use common\models\VideoFiles;
 use backend\models\User;
 
 class VideoController extends ActiveController

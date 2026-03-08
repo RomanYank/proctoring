@@ -4,7 +4,7 @@ namespace common\jobs;
 use yii\base\BaseObject;
 use yii\queue\JobInterface;
 use GuzzleHttp\Client;
-use backend\models\VideoFiles;
+use common\models\VideoFiles;
 use Yii;
 
 class AnalyzeJob extends BaseObject implements JobInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\models;
+namespace common\models;
 
 use Yii;
 
@@ -12,6 +12,8 @@ use Yii;
  * @property string $capture_screen_video
  * @property string $date
  * @property int $user_id
+ * @property int|null $verify
+ * @property string|null $violations
  *
  * @property User $user
  */
@@ -55,6 +57,8 @@ class VideoFiles extends \yii\db\ActiveRecord
             'capture_screen_video' => 'Ссылка на видео с захвата экрана',
             'date' => 'Дата и время записи',
             'user_id' => 'ID пользователя',
+            'verify' => 'Статус проверки',
+            'violations' => 'Нарушения',
         ];
     }
 

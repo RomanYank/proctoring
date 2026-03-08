@@ -20,14 +20,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'status')->textInput() ?>
 
-    <?= $form->field($model, 'auth_key')->textInput() ?>
-
     <?= $form->field($model, 'role')->textInput() ?>
 
     <?= $form->field($model, 'department_id')->textInput() ?>
 
     <div class="form-group" style="margin-top: 15px">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

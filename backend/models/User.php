@@ -2,7 +2,7 @@
 
 namespace backend\models;
 use Yii;
-use backend\models\VideoFiles;
+use common\models\VideoFiles;
 /**
  * This is the model class for table "user".
  *
