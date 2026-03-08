@@ -4,12 +4,9 @@ namespace frontend\controllers;
 use Yii;
 use yii\rest\ActiveController;
 use backend\models\User;
-use backend\models\Department;
+use common\models\Department;
 class UserController extends ActiveController
 {
-
-    public $modelClass = 'backend\models\User';
-
     public function actions()
     {
         $actions = parent::actions();

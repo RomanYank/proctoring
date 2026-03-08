@@ -5,11 +5,12 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use frontend\models\User;
+use common\models\LoginForm as CommonLoginForm;
 
 /**
  * Login form
  */
-class LoginForm extends Model
+class LoginForm extends CommonLoginForm
 {
     public $username;
     public $password_hash;

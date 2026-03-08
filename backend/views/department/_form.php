@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'recording_time')->textInput() ?>
 
     <div class="form-group" style="margin-top: 15px">
-        <?= Html::submitButton('Срхранить', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Срхранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

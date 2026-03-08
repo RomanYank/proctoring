@@ -2,13 +2,11 @@
 
 namespace frontend\controllers;
 use Yii;
-use backend\models\Department;
+use common\models\Department;
 use yii\rest\ActiveController;
 
 class DepartmentController extends ActiveController
 {
-    public $modelClass = 'backend\models\Department';
-
     public function actions()
     {
         $actions = parent::actions();

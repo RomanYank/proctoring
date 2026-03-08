@@ -8,8 +8,6 @@ use backend\models\User;
 
 class VideoController extends ActiveController
 {
-    public $modelClass = 'backend\models\Video';
-
     public function actions()
     {
         $actions = parent::actions();

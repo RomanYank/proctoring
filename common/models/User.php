@@ -59,12 +59,12 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public attributeLabels()
+    public function attributeLabels()
     {
         return [
-            'username' => 'Username',
+            'username' => 'Логин',
             'email' => 'Email',
-            'password_hash' => 'Password',
+            'password_hash' => 'Пароль',
         ];
     }
     

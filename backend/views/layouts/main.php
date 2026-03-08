@@ -34,24 +34,25 @@ AppAsset::register($this);
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Пользователи', 'url' => ['/user/index']],
-        ['label' => 'Организации', 'url' => ['/department/index']],
-        ['label' => 'Протоколы обучения', 'url' => ['/site/index']],
-        ['label' => 'Дообучить модель', 'url' => ['/train/index']],
-        ['label' => 'Загрузить модель', 'url' => ['/prediction/load']],
-        ['label' => 'Сделать предсказание', 'url' => ['/prediction/evaluate']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+    
+    $menuItems = [];
+
+    if (!Yii::$app->user->isGuest) {
+        $menuItems = [
+            ['label' => 'Пользователи', 'url' => ['/user/index']],
+            ['label' => 'Организации', 'url' => ['/department/index']],
+            ['label' => 'Протоколы обучения', 'url' => ['/site/index']],
+            // ['label' => 'Дообучить модель', 'url' => ['/train/index']],
+            // ['label' => 'Загрузить модель', 'url' => ['/prediction/load']],
+            // ['label' => 'Сделать предсказание', 'url' => ['/prediction/evaluate']],
+        ];
     }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
         'items' => $menuItems,
     ]);
-    if (Yii::$app->user->isGuest) {
-        echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-link login text-decoration-none']]),['class' => ['d-flex']]);
-    } else {
+    if (!Yii::$app->user->isGuest) {
         echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
             . Html::submitButton(
                 'Выйти (' . Yii::$app->user->identity->username . ')',

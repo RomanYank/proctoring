@@ -1,17 +1,17 @@
 <?php
 
-namespace backend\models;
+namespace common\models;
 
 use Yii;
 
 /**
- * This is the model class for table "recording_settings".
+ * This is the model class for table "department".
  *
  * @property int $id
  * @property int $recording_time
- * @property int $user_id
+ * @property string $name
  *
- * @property User $user
+ * @property Department $department
  */
 class Department extends \yii\db\ActiveRecord
 {

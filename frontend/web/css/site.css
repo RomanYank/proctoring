@@ -235,30 +235,30 @@ a.desc:after {
     padding: 10px 25px;
 }
 
-.prcotroing-give-permission-elements {
+.proctoring-give-permission-elements {
     display: flex;
     align-items: center;
     margin: 30px 0;
 }
 
-.prcotroing-give-permission-element {
+.proctoring-give-permission-element {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.prcotroing-give-permission-element-icon {position: relative;}
-.prcotroing-give-permission-element-icon img {
+.proctoring-give-permission-element-icon {position: relative;}
+.proctoring-give-permission-element-icon img {
     width: 120px;
     height: 120px;
     margin: 10px;
 }
 
-.prcotroing-give-permission-element-description {
+.proctoring-give-permission-element-description {
     font-size: 16px;
     font-weight: 600;
 }
 
-.prcotroing-give-permission-element-loader {
+.proctoring-give-permission-element-loader {
     display: block;
     position: absolute;
     inset-block-start: 0;
@@ -270,8 +270,8 @@ a.desc:after {
     border-width: 3px;
     border-color: transparent;
 }
-.prcotroing-give-permission-element-loader.error {border-color: #f00;}
-.prcotroing-give-permission-element-loader.active {border-color: rgb(0 150 150);}
+.proctoring-give-permission-element-loader.error {border-color: #f00;}
+.proctoring-give-permission-element-loader.active {border-color: rgb(0 150 150);}
 .preloader {
     border-block-start-color: rgb(0 150 150);
     animation-name: rotation;
@@ -280,6 +280,43 @@ a.desc:after {
     animation-timing-function: linear;
 }
 #video_files {display: none;}
+
+.main-proctoring-row {
+    width: 100%;
+    padding: 2.5rem;
+}
+
+.proctoring-logout {
+    color: #fff !important;
+    width: 100%;
+    text-align: right;
+}
+
+.proctoring-logout:hover {
+    text-decoration: underline;
+}
+
+.container-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.container-checkbox input[type="checkbox"] {
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.container-checkbox label {
+    cursor: pointer;
+    color: #333;
+}
+
 @keyframes rotation {
     0% {
         transform: rotate(0deg);
