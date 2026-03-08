@@ -51,10 +51,10 @@ class VideoFiles extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'web_camera_video' => 'Web Camera Video',
-            'capture_screen_video' => 'Capture Screen Video',
-            'date' => 'Date',
-            'user_id' => 'User ID',
+            'web_camera_video' => 'Ссылка на видео с веб-камеры',
+            'capture_screen_video' => 'Ссылка на видео с захвата экрана',
+            'date' => 'Дата и время записи',
+            'user_id' => 'ID пользователя',
         ];
     }
 

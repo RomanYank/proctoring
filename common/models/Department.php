@@ -11,7 +11,6 @@ use Yii;
  * @property int $recording_time
  * @property string $name
  *
- * @property Department $department
  */
 class Department extends \yii\db\ActiveRecord
 {
