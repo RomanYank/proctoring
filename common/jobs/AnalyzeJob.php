@@ -15,7 +15,7 @@ class AnalyzeJob extends BaseObject implements JobInterface
     public function execute($queue)
     {
         $client = new Client();
-        $url = 'http://127.0.0.1:8000/analyze/';
+        $url = 'http://fastapi:8000/analyze/';
 
         try {
             $response = $client->request('POST', $url, [

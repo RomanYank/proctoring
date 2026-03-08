@@ -326,29 +326,37 @@ class SiteController extends Controller
 
             return 'success';
         } catch (\Throwable $e) {
-            return '<h2>Upload failed.</h2><br><p>' . $e->getMessage() . '</p>';
+            return $e->getMessage();
         }
     }
 
-    public function actionSaveVideo() {
-        $model = new VideoFiles();
+    public function actionSaveVideo()
+    {
         Yii::$app->response->format = Response::FORMAT_JSON;
-        if (Yii::$app->request->isAjax) {
-            $data = Yii::$app->request->post();
-            $model->user_id = Yii::$app->user->identity->id;
-            $model->date = date("y/m/d");
-            $model->web_camera_video = $data['web_camera_video'];
-            $model->capture_screen_video = $data['capture_screen_video'];
-            $model->verify = 0;
-            if ($model->save()) {
-                Yii::$app->queue->push(new AnalyzeJob([
-                    'videoPath' => Yii::getAlias('@frontend/web/record/video/' . $model->web_camera_video),
-                    'videoId' => $model->id,
-                ]));
-                return ['response' => true];
-            } else {
-                return ['response' => false];
-            }
+    
+        if (!Yii::$app->request->isAjax) {
+            return ['response' => false];
         }
+    
+        $model = new VideoFiles();
+        $data = Yii::$app->request->post();
+        $model->user_id = Yii::$app->user->identity->id;
+        $model->date = date("Y-m-d H:i:s");
+        $model->web_camera_video = $data['web_camera_video'];
+        $model->capture_screen_video = $data['capture_screen_video'];
+        $model->verify = 0;
+    
+        if ($model->save()) {    
+            Yii::$app->queue->push(new AnalyzeJob([
+                'videoPath' => Yii::getAlias('@frontend/web/record/video/' . $model->web_camera_video),
+                'videoId'   => $model->id,
+            ]));
+    
+            return ['response' => true];
+        }
+    
+        Yii::error(json_encode($model->errors), 'video');
+    
+        return ['response' => false];
     }
 }
