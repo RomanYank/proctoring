@@ -3,6 +3,8 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\bootstrap5\Modal;
+use yii\helpers\Url;
+
 $this->title = 'Протоколы обучения';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -57,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]);
         
                 echo Html::tag('video', '', [
-                    'src' => '/public/frontend/web/record/video/' . $model['web_camera_video'],
+                    'src' => Url::to('http://localhost/record/video/' . $model['web_camera_video'], true),
                     'controls' => true,
                     'style' => 'width:100%;',
                     'id' => 'video-' . $model->id,
@@ -113,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]);
                 echo Html::tag('video', '', [
-                    'src' => '/public/frontend/web/record/video/' . $model['capture_screen_video'],
+                    'src' => Url::to('http://localhost/record/video/' . $model['capture_screen_video'], true),
                     'controls' => true,
                     'style' => 'width:100%;'
                 ]);

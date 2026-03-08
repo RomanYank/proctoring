@@ -18,6 +18,7 @@ services:
     build: .
     volumes:
       - ./:/var/www
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
     expose:
       - "9000"
     networks:
