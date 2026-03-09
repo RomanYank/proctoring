@@ -69,9 +69,7 @@ $questions = [
 ];
 
 $timeRecording = (int)($model?->recording_time ?? 180);
-if ($timeRecording < 60) {
-    $timeRecording = 60;
-}
+
 ?>
 
 <div class="main-proctoring-row" id="proctoring-app">
@@ -108,8 +106,8 @@ if ($timeRecording < 60) {
     </div>
 
     <div class="content-step step-2">
-        <h3>Проверка оборудования (без записи)</h3>
-        <p>Сейчас система проверит доступ к устройствам. Видео не записывается и не отправляется.</p>
+        <h3>Проверка оборудования</h3>
+        <p>Сейчас система проверит доступ к устройствам.</p>
 
         <div class="proctoring-give-permission-elements">
             <?php foreach ($checks as $check): ?>
@@ -185,29 +183,29 @@ if ($timeRecording < 60) {
 $(function() {
     var uploadUrl = "<?= Url::to(['site/upload']) ?>";
     var saveVideoUrl = "<?= Url::to(['site/save-video']) ?>";
-    var recordingSeconds = <?= (int)$timeRecording ?>;
+    var recordingSeconds = <?= (int) $timeRecording ?>;
 
-    var $app = $('#proctoring-app');
-    var $stepNames = $app.find('.step-name');
-    var $stepBlocks = $app.find('.content-step');
-    var $allowCheckbox = $('#allow');
+    var app = ('#proctoring-app');
+    var stepNames = app.find('.step-name');
+    var stepBlocks = app.find('.content-step');
+    var allowCheckbox = ('#allow');
 
-    var $retryChecksButton = $('#retry-checks');
-    var $startExamButton = $('#start-exam');
-    var $goToChecksButton = $('#go-to-checks');
+    var retryChecksButton = ('#retry-checks');
+    var startExamButton = ('#start-exam');
+    var goToChecksButton = ('#go-to-checks');
 
-    var webcamPreview = $('#webcam-preview')[0];
-    var screenPreview = $('#screen-preview')[0];
-    var $examForm = $('#exam-form');
-    var examForm = $examForm[0];
-    var $examTimer = $('#exam-timer');
-    var $examContent = $('#exam-content');
-    var $screenPermissionNote = $('#screen-permission-note');
-    var $questionProgress = $('#question-progress');
-    var $finishExamButton = $('#finish-exam-btn');
-    var $resultScore = $('#exam-result-score');
-    var $resultUpload = $('#exam-result-upload');
-    var questionBlocks = $.makeArray($examForm.find('.question-block'));
+    var webcamPreview = ('#webcam-preview')[0];
+    var screenPreview = ('#screen-preview')[0];
+    var examForm = ('#exam-form');
+    var examForm = examForm[0];
+    var examTimer = ('#exam-timer');
+    var examContent = ('#exam-content');
+    var screenPermissionNote = ('#screen-permission-note');
+    var questionProgress = ('#question-progress');
+    var finishExamButton = ('#finish-exam-btn');
+    var resultScore = ('#exam-result-score');
+    var resultUpload = ('#exam-result-upload');
+    var questionBlocks = $.makeArray(examForm.find('.question-block'));
 
     var webcamStream = null;
     var screenStream = null;
@@ -221,27 +219,27 @@ $(function() {
     var currentQuestionIndex = 0;
 
     function switchStep(stepNumber) {
-        $stepNames.each(function(idx) {
-            $(this).toggleClass('active', idx === stepNumber - 1);
+        stepNames.each(function(idx) {
+            (this).toggleClass('active', idx === stepNumber - 1);
         });
-        $stepBlocks.each(function(idx) {
-            $(this).toggleClass('active', idx === stepNumber - 1);
+        stepBlocks.each(function(idx) {
+            (this).toggleClass('active', idx === stepNumber - 1);
         });
     }
 
     function setCheckState(checkId, state, text) {
-        var $root = $app.find('[data-check="' + checkId + '"]');
-        if (!$root.length) {
+        var root = app.find('[data-check="' + checkId + '"]');
+        if (!root.length) {
             return;
         }
-        var $loader = $root.find('.proctoring-give-permission-element-loader');
-        var $status = $root.find('.check-status');
+        var loader = root.find('.proctoring-give-permission-element-loader');
+        var status = root.find('.check-status');
 
-        $loader.removeClass('preloader active error');
+        loader.removeClass('preloader active error');
         if (state) {
-            $loader.addClass(state);
+            loader.addClass(state);
         }
-        $status.text(text);
+        status.text(text);
     }
 
     function stopTracks(stream) {
@@ -254,7 +252,7 @@ $(function() {
     }
 
     async function runPreChecks() {
-        $startExamButton.prop('disabled', true);
+        startExamButton.prop('disabled', true);
         ['cam-mic', 'camera', 'network', 'screen'].forEach(function(check) {
             setCheckState(check, 'preloader', 'Проверка...');
         });
@@ -299,7 +297,7 @@ $(function() {
         stopTracks(tempScreen);
 
         var allPassed = camMicOk && cameraOk && networkOk && screenOk;
-        $startExamButton.prop('disabled', !allPassed);
+        startExamButton.prop('disabled', !allPassed);
         return allPassed;
     }
 
@@ -344,7 +342,7 @@ $(function() {
         formData.append('video-blob', file);
         formData.append('video-filename', filename);
 
-        await $.ajax({
+        await .ajax({
             url: uploadUrl,
             type: 'POST',
             data: formData,
@@ -356,7 +354,7 @@ $(function() {
     function updateTimer() {
         var mm = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
         var ss = String(secondsLeft % 60).padStart(2, '0');
-        $examTimer.text(mm + ':' + ss);
+        examTimer.text(mm + ':' + ss);
     }
 
     function startTimer() {
@@ -381,10 +379,10 @@ $(function() {
 
     function renderQuestionStep() {
         questionBlocks.forEach(function(block, idx) {
-            $(block).toggle(idx === currentQuestionIndex);
+            (block).toggle(idx === currentQuestionIndex);
         });
-        $questionProgress.text('Вопрос ' + (currentQuestionIndex + 1) + ' из ' + questionBlocks.length);
-        $finishExamButton.toggle(currentQuestionIndex === questionBlocks.length - 1);
+        questionProgress.text('Вопрос ' + (currentQuestionIndex + 1) + ' из ' + questionBlocks.length);
+        finishExamButton.toggle(currentQuestionIndex === questionBlocks.length - 1);
     }
 
     function resetQuestionFlow() {
@@ -417,8 +415,8 @@ $(function() {
         webcamRecorder.start(1000);
         screenRecorder.start(1000);
 
-        $screenPermissionNote.hide();
-        $examContent.css('display', 'flex');
+        screenPermissionNote.hide();
+        examContent.css('display', 'flex');
         startTimer();
     }
 
@@ -447,9 +445,9 @@ $(function() {
 
     function calculateResult() {
         var correct = 0;
-        $examForm.find('.question-block').each(function() {
-            var rightAnswer = $(this).data('answer');
-            var selected = $(this).find('input[type="radio"]:checked');
+        examForm.find('.question-block').each(function() {
+            var rightAnswer = (this).data('answer');
+            var selected = (this).find('input[type="radio"]:checked');
             if (selected.length && selected.val() == rightAnswer) {
                 correct += 1;
             }
@@ -483,9 +481,9 @@ $(function() {
         }
     }
 
-    $goToChecksButton.on('click', function(e) {
+    goToChecksButton.on('click', function(e) {
         e.preventDefault();
-        if (!$allowCheckbox.is(':checked')) {
+        if (!allowCheckbox.is(':checked')) {
             alert('Необходимо принять правила.');
             return;
         }
@@ -493,19 +491,19 @@ $(function() {
         runPreChecks();
     });
 
-    $retryChecksButton.on('click', function() {
+    retryChecksButton.on('click', function() {
         runPreChecks();
     });
 
-    $startExamButton.on('click', async function() {
+    startExamButton.on('click', async function() {
         try {
             recordingStopped = false;
             webcamChunks = [];
             screenChunks = [];
             switchStep(3);
-            $examContent.hide();
-            $screenPermissionNote.show().text('Подтвердите демонстрацию экрана в системном окне браузера.');
-            $examTimer.text('--:--');
+            examContent.hide();
+            screenPermissionNote.show().text('Подтвердите демонстрацию экрана в системном окне браузера.');
+            examTimer.text('--:--');
             resetQuestionFlow();
             await startExamRecording();
         } catch (e) {
@@ -515,24 +513,24 @@ $(function() {
         }
     });
 
-    $examForm.on('change', 'input[type="radio"]', function() {
+    examForm.on('change', 'input[type="radio"]', function() {
         if (currentQuestionIndex < questionBlocks.length - 1) {
             currentQuestionIndex += 1;
             renderQuestionStep();
         }
     });
 
-    $examForm.on('submit', async function(e) {
+    examForm.on('submit', async function(e) {
         e.preventDefault();
         var result = calculateResult();
-        $resultScore.text('Результат теста: ' + result.correct + ' из ' + result.total + '.');
-        $resultUpload.text('Идет сохранение записей...');
+        resultScore.text('Результат теста: ' + result.correct + ' из ' + result.total + '.');
+        resultUpload.text('Идет сохранение записей...');
 
         try {
             await finalizeExam();
-            $resultUpload.text('Записи камеры и экрана успешно сохранены.');
+            resultUpload.text('Записи камеры и экрана успешно сохранены.');
         } catch (error) {
-            $resultUpload.text('Ошибка сохранения: ' + error.message);
+            resultUpload.text('Ошибка сохранения: ' + error.message);
         }
 
         switchStep(4);
