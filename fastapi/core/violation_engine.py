@@ -1,25 +1,34 @@
 class ViolationEngine:
+    """Translate aggregated detection data into named violations with simple thresholds."""
 
     def detect(self, data):
+        """Return violations only when relevant states exceed their filters."""
         violations = []
 
-        if "gaze" in data and data["gaze"].value in ["left", "right"]:
+        gaze_state = data.get("gaze")
+        if gaze_state and gaze_state.value in ["left", "right"]:
             violations.append("Looking away")
 
-        if "mouth" in data and data["mouth"].value == "open":
-            violations.append("Talking")
+        mouth_state = data.get("mouth")
+        if mouth_state and mouth_state.value == "open":
+            violations.append("Mouth open")
 
-        if data.get("head") and data["head"].value in ["left", "right", "down", "up"]:
-            violations.append(f"Head turned {data['head'].value}")
-            
-        if "objects" in data:
+        head_state = data.get("head")
+        if head_state and head_state.value in ["left", "right", "down", "up"]:
+            violations.append(f"Head turned {head_state.value}")
 
-            objects = [o.value for o in data["objects"]]
+        object_detections = [
+            obj.get("state")
+            for obj in data.get("objects", [])
+            if obj.get("state")
+        ]
 
-            if "phone" in objects:
-                violations.append("Phone detected")
+        object_values = [obj.value for obj in object_detections]
 
-            if objects.count("person") > 1:
-                violations.append("Multiple persons detected")
+        if any(value == "phone" for value in object_values):
+            violations.append("Phone detected")
+
+        if object_values.count("person") > 1:
+            violations.append("Multiple persons detected")
 
         return violations

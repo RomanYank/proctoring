@@ -29,6 +29,9 @@ class MouthStateDetector:
         mouth_distance = self._distance(upper, lower)
         face_scale = self._distance(left_eye, right_eye)
 
+        if face_scale <= 1e-6:
+            return MouthState.CLOSED
+
         ratio = mouth_distance / face_scale
         state = ratio > self.threshold
 

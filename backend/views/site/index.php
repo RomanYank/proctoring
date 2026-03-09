@@ -1,138 +1,228 @@
 <?php
 
+use yii\bootstrap5\Modal;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\bootstrap5\Modal;
 use yii\helpers\Url;
 
 $this->title = 'Протоколы обучения';
 $this->params['breadcrumbs'][] = $this->title;
-?>
-<style>
-.modal-body {
+
+$this->registerCss(<<<CSS
+.proctoring-modal-wrap {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+}
+.proctoring-violations {
+    max-height: 72vh;
+    overflow-y: auto;
+    border-left: 1px solid #e5e5e5;
+    padding-left: 12px;
+}
+.violation-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 8px;
+    cursor: pointer;
+}
+.violation-card:hover {
+    border-color: #198754;
+}
+.violation-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.violation-thumb {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #e5e5e5;
+}
+.proctoring-summary {
     display: flex;
-    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 16px;
 }
-.modal-body video {
-    max-width: 70%;
+.summary-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 12px;
+    min-width: 160px;
 }
-.modal-body .violations-box {
-    width: 25%;
-    max-height:580px; 
-    overflow-y:auto;
+.summary-item.filter-item {
+    cursor: pointer;
 }
-</style>
+.summary-item.filter-item.active {
+    border-color: #198754;
+    background: #eefaf3;
+}
+.summary-item .label {
+    font-size: 12px;
+    color: #666;
+}
+.summary-item .value {
+    font-size: 20px;
+    font-weight: 700;
+}
+CSS);
+?>
+
 <h1><?= Html::encode($this->title) ?></h1>
+
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [
         'id',
         [
             'attribute' => 'user.full_name',
-            'label' => 'ФИО',
-        ],
-        [
-            'label' => 'Видео с веб-камеры',
-            'format' => 'raw',
-            'value' => function ($model) {
-                $violationsJson = $model->violations;
-                $uniqueViolations = [];
-                if(!empty($violationsJson)) {
-                    $violations = json_decode($violationsJson, true);
-            
-                    foreach ($violations as $v) {
-                        $key = $v['time'] . ' - ' . $v['violation'];
-                        $uniqueViolations[$key] = $v;
-                    }
-                }
-                ob_start();
-        
-                Modal::begin([
-                    'title' => '<div class="title-modal">Видео с веб-камеры</div>',
-                    'size' => Modal::SIZE_EXTRA_LARGE,
-                    'toggleButton' => [
-                        'label' => '<svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 1024 1024"><path fill="#000000" d="M512 160c320 0 512 352 512 352S832 864 512 864 0 512 0 512s192-352 512-352zm0 64c-225.28 0-384.128 208.064-436.8 288 52.608 79.872 211.456 288 436.8 288 225.28 0 384.128-208.064 436.8-288-52.608-79.872-211.456-288-436.8-288zm0 64a224 224 0 1 1 0 448 224 224 0 0 1 0-448zm0 64a160.192 160.192 0 0 0-160 160c0 88.192 71.744 160 160 160s160-71.808 160-160-71.744-160-160-160z"/></svg>',
-                        'tag' => 'button',
-                        'class' => 'btn btn-click-video-modal',
-                    ],
-                    'options' => ['id' => 'modal-video-' . $model->id]
-                ]);
-        
-                echo Html::tag('video', '', [
-                    'src' => Url::to('http://localhost/record/video/' . $model['web_camera_video'], true),
-                    'controls' => true,
-                    'style' => 'width:100%;',
-                    'id' => 'video-' . $model->id,
-                ]);
-        
-                echo '<div class="violations-box"> 
-                        <h3>Список зафиксированных нарушений</h3>
-                        <ul style="list-style:none; padding:0;">';
-                foreach ($uniqueViolations as $uv) {
-                    list($m, $s) = explode(':', $uv['time']);
-                    $seconds = ((int)$m) * 60 + ((int)$s);
-        
-                    echo '<li style="cursor:pointer; padding:5px 0; border-bottom:1px solid #ddd;" ' .
-                        'class="violation-item" ' .
-                        'data-video-id="video-' . $model->id . '" ' .
-                        'data-time="' . $seconds . '">' .
-                        htmlspecialchars($uv['time'] . ' - ' . $uv['violation']) .
-                        '</li>';
-                }
-                echo '</ul>';
-                echo '</div>';
-        
-                Modal::end();
-        
-                $js = <<<JS
-                $(document).on('click', '.violation-item', function() {
-                    var video = document.getElementById($(this).data('video-id'));
-                    if (video) {
-                        video.currentTime = $(this).data('time');
-                        video.play();
-                    }
-                });
-                JS;
-        
-                \yii\web\YiiAsset::register(Yii::$app->view);
-                Yii::$app->view->registerJs($js);
-        
-                return ob_get_clean();
-            }
-        ],
-        [
-            'label' => 'Демонстрация экрана',
-            'format' => 'raw',
-            'value' => function ($model) {
-                ob_start();
-                Modal::begin([
-                    'title' => '<div class="title-modal">Демонстрация экрана</div>',
-                    'size' => 'modal-xl',
-                    'toggleButton' => [
-                        'label' => '<svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 1024 1024"><path fill="#000000" d="M512 160c320 0 512 352 512 352S832 864 512 864 0 512 0 512s192-352 512-352zm0 64c-225.28 0-384.128 208.064-436.8 288 52.608 79.872 211.456 288 436.8 288 225.28 0 384.128-208.064 436.8-288-52.608-79.872-211.456-288-436.8-288zm0 64a224 224 0 1 1 0 448 224 224 0 0 1 0-448zm0 64a160.192 160.192 0 0 0-160 160c0 88.192 71.744 160 160 160s160-71.808 160-160-71.744-160-160-160z"/></svg>',
-                        'tag' => 'button',
-                        'class' => 'btn btn-click-video-modal',
-                    ],
-                ]);
-                echo Html::tag('video', '', [
-                    'src' => Url::to('http://localhost/record/video/' . $model['capture_screen_video'], true),
-                    'controls' => true,
-                    'style' => 'width:100%;'
-                ]);
-                Modal::end();
-                return ob_get_clean();
-            }
+            'label' => 'Пользователь',
         ],
         [
             'attribute' => 'date',
-            'label' => 'Дата',
+            'label' => 'Дата записи',
         ],
         [
             'attribute' => 'verify',
             'label' => 'Статус проверки',
-            'value' => function($model) {
+            'value' => static function ($model) {
                 return $model->statusLabel();
-            }
-        ]
+            },
+        ],
+        [
+            'label' => 'Веб-камера и нарушения',
+            'format' => 'raw',
+            'value' => static function ($model) {
+                $violations = [];
+                if (!empty($model->violations)) {
+                    $decoded = json_decode($model->violations, true);
+                    if (is_array($decoded)) {
+                        $violations = $decoded;
+                    }
+                }
+
+                $totalViolations = count($violations);
+                $violationGroups = [];
+                foreach ($violations as $v) {
+                    $key = $v['violation'] ?? 'Unknown';
+                    $violationGroups[$key] = ($violationGroups[$key] ?? 0) + 1;
+                }
+                $uniqueTypes = count($violationGroups);
+
+                $modalId = 'proctoring-modal-' . $model->id;
+                $videoId = 'webcam-video-' . $model->id;
+                $screenId = 'screen-video-' . $model->id;
+                $frontendHost = rtrim((string)\Yii::$app->request->hostInfo, '/');
+                $frontendHost = preg_replace('#^http://admin\.localhost$#i', 'http://localhost', $frontendHost);
+                $frontendHost = preg_replace('#^https://admin\.localhost$#i', 'https://localhost', $frontendHost);
+
+                $cameraUrl = $frontendHost . '/record/video/' . ltrim((string)$model->web_camera_video, '/');
+                $screenUrl = $frontendHost . '/record/video/' . ltrim((string)$model->capture_screen_video, '/');
+
+                ob_start();
+
+                Modal::begin([
+                    'title' => 'Протокол записи №' . (int)$model->id,
+                    'size' => Modal::SIZE_EXTRA_LARGE,
+                    'options' => ['id' => $modalId],
+                    'toggleButton' => [
+                        'label' => 'Открыть протокол',
+                        'class' => 'btn btn-outline-primary',
+                    ],
+                ]);
+
+                echo '<div class="proctoring-summary">';
+                echo '<div class="summary-item"><div class="label">Типов нарушений</div><div class="value">' . (int)$uniqueTypes . '</div></div>';
+                echo '<div class="summary-item filter-item active" data-filter="all" data-modal="' . Html::encode($modalId) . '"><div class="label">Все логи</div><div class="value">' . (int)$totalViolations . '</div></div>';
+                foreach ($violationGroups as $type => $count) {
+                    echo '<div class="summary-item filter-item" data-filter="' . Html::encode($type) . '" data-modal="' . Html::encode($modalId) . '"><div class="label">' . Html::encode($type) . '</div><div class="value">' . (int)$count . '</div></div>';
+                }
+                echo '</div>';
+
+                echo '<div class="proctoring-modal-wrap">';
+                echo '<div>';
+                echo Html::tag('h6', 'Видео с веб-камеры');
+                echo Html::tag('video', '', [
+                    'id' => $videoId,
+                    'src' => $cameraUrl,
+                    'controls' => true,
+                    'style' => 'width:100%; margin-bottom: 16px;',
+                ]);
+
+                echo Html::tag('h6', 'Запись экрана');
+                echo Html::tag('video', '', [
+                    'id' => $screenId,
+                    'src' => $screenUrl,
+                    'controls' => true,
+                    'style' => 'width:100%;',
+                ]);
+                echo '</div>';
+
+                echo '<div class="proctoring-violations">';
+                echo '<h6>Лог нарушений</h6>';
+
+                if (!$violations) {
+                    echo '<p>Нарушения не зафиксированы.</p>';
+                } else {
+                    foreach ($violations as $idx => $v) {
+                        $time = $v['time'] ?? '00:00';
+                        $violation = $v['violation'] ?? 'Unknown';
+                        $imgLog = $v['img_log'] ?? '';
+
+                        [$m, $s] = array_pad(explode(':', $time), 2, '0');
+                        $seconds = ((int)$m) * 60 + (int)$s;
+
+                        echo '<div class="violation-card jump-to-time" data-modal="' . Html::encode($modalId) . '" data-violation="' . Html::encode($violation) . '" data-video-id="' . Html::encode($videoId) . '" data-seconds="' . (int)$seconds . '">';
+                        echo '<div class="violation-title">' . Html::encode(($idx + 1) . '. ' . $time . ' - ' . $violation) . '</div>';
+                        if (!empty($imgLog)) {
+                            echo '<img class="violation-thumb" alt="Violation screenshot" src="data:image/jpeg;base64,' . Html::encode($imgLog) . '">';
+                        } else {
+                            echo '<div class="text-muted">Скриншот отсутствует</div>';
+                        }
+                        echo '</div>';
+                    }
+                }
+
+                echo '</div>';
+                echo '</div>';
+
+                Modal::end();
+
+                return ob_get_clean();
+            },
+        ],
     ],
 ]); ?>
+
+<?php
+$this->registerJs(<<<JS
+    $(document).on('click', '.jump-to-time', function () {
+        var videoId = $(this).data('video-id');
+        var seconds = parseInt($(this).data('seconds'), 10) || 0;
+        var video = document.getElementById(videoId);
+        if (!video) {
+            return;
+        }
+        video.currentTime = seconds;
+        video.play();
+    });
+
+    $(document).on('click', '.filter-item', function () {
+        var modalId = $(this).data('modal');
+        var filter = $(this).data('filter');
+        var modal = $('#' + modalId);
+
+        modal.find('.filter-item').removeClass('active');
+        $(this).addClass('active');
+
+        modal.find('.violation-card').each(function () {
+            var type = $(this).data('violation');
+            if (filter === 'all' || type === filter) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+JS);
+?>

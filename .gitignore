@@ -24,3 +24,17 @@ npm-debug.log
 
 .env
 .env.*
+
+# Local temporary folders
+.tmp_ref_repo/
+
+# Python cache artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Proctoring recordings and generated artifacts
+frontend/web/record/video/
+fastapi/data/videos/
+fastapi/data/violations/
