@@ -5,9 +5,9 @@ from models.states import GazeState
 
 
 class GazeDetector:
-    """Преобразует данные из gaze_tracking в устойчивые состояния направления взгляда."""
+    """Converts raw gaze ratios into more conservative stable gaze states."""
 
-    def __init__(self, left_threshold=0.75, right_threshold=0.25, window_size=6, min_votes=4):
+    def __init__(self, left_threshold=0.82, right_threshold=0.18, window_size=8, min_votes=5):
         self.gaze = GazeTracking()
         self.left_threshold = left_threshold
         self.right_threshold = right_threshold
@@ -25,18 +25,21 @@ class GazeDetector:
         return GazeState.CENTER
 
     def detect(self, frame):
-        """Принимает кадр, обновляет данные о взгляде и возвращает устойчивое состояние направления взгляда."""
         self.gaze.refresh(frame)
         state = self._raw_detect()
         self.history.append(state)
 
-        if sum(1 for value in self.history if value == GazeState.LEFT) >= self.min_votes:
+        left_votes = sum(1 for value in self.history if value == GazeState.LEFT)
+        right_votes = sum(1 for value in self.history if value == GazeState.RIGHT)
+        center_votes = sum(1 for value in self.history if value == GazeState.CENTER)
+
+        if left_votes >= self.min_votes and self.history[-1] == GazeState.LEFT:
             return GazeState.LEFT
 
-        if sum(1 for value in self.history if value == GazeState.RIGHT) >= self.min_votes:
+        if right_votes >= self.min_votes and self.history[-1] == GazeState.RIGHT:
             return GazeState.RIGHT
 
-        if sum(1 for value in self.history if value == GazeState.CENTER) >= max(2, self.min_votes - 1):
+        if center_votes >= max(3, self.min_votes - 1):
             return GazeState.CENTER
 
         return GazeState.UNKNOWN
