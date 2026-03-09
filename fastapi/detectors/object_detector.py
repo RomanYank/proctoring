@@ -7,10 +7,10 @@ class ObjectDetector:
     def __init__(
         self,
         model="yolov8n.pt",
-        person_confidence=0.6,
+        person_confidence=0.72,
         phone_confidence=0.45,
         book_confidence=0.45,
-        min_person_area_ratio=0.08,
+        min_person_area_ratio=0.1,
     ):
         self.model = YOLO(model)
         self.person_confidence = person_confidence

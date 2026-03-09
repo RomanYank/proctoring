@@ -524,6 +524,7 @@ $(function() {
 
     $examForm.on('submit', async function(e) {
         e.preventDefault();
+        $finishExamButton.prop('disabled', true);
         var result = calculateResult();
         $resultScore.text('Результат теста: ' + result.correct + ' из ' + result.total + '.');
         $resultUpload.text('Идет сохранение записей...');

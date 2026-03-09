@@ -5,9 +5,7 @@ from models.states import GazeState
 
 
 class GazeDetector:
-    """Converts raw gaze ratios into more conservative stable gaze states."""
-
-    def __init__(self, left_threshold=0.82, right_threshold=0.18, window_size=8, min_votes=5):
+    def __init__(self, left_threshold=0.86, right_threshold=0.14, window_size=10, min_votes=7):
         self.gaze = GazeTracking()
         self.left_threshold = left_threshold
         self.right_threshold = right_threshold
@@ -32,14 +30,15 @@ class GazeDetector:
         left_votes = sum(1 for value in self.history if value == GazeState.LEFT)
         right_votes = sum(1 for value in self.history if value == GazeState.RIGHT)
         center_votes = sum(1 for value in self.history if value == GazeState.CENTER)
+        recent = list(self.history)[-3:]
 
-        if left_votes >= self.min_votes and self.history[-1] == GazeState.LEFT:
+        if left_votes >= self.min_votes and recent.count(GazeState.LEFT) >= 2:
             return GazeState.LEFT
 
-        if right_votes >= self.min_votes and self.history[-1] == GazeState.RIGHT:
+        if right_votes >= self.min_votes and recent.count(GazeState.RIGHT) >= 2:
             return GazeState.RIGHT
 
-        if center_votes >= max(3, self.min_votes - 1):
+        if center_votes >= max(4, self.min_votes - 2):
             return GazeState.CENTER
 
         return GazeState.UNKNOWN
