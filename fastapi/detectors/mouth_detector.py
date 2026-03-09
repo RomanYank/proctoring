@@ -1,7 +1,6 @@
-from collections import deque
 import math
-from videoProcessing.states import MouthState
-
+from collections import deque
+from models.states import MouthState
 
 class MouthStateDetector:
 
@@ -15,7 +14,10 @@ class MouthStateDetector:
         self.history = deque(maxlen=window)
 
     def _distance(self, p1, p2):
-        return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
+        return math.sqrt(
+            (p1.x - p2.x) ** 2 +
+            (p1.y - p2.y) ** 2
+        )
 
     def detect(self, landmarks):
         upper = landmarks[self.UPPER_LIP]
@@ -29,6 +31,7 @@ class MouthStateDetector:
 
         ratio = mouth_distance / face_scale
         state = ratio > self.threshold
+
         self.history.append(state)
 
         if sum(self.history) > len(self.history) / 2:

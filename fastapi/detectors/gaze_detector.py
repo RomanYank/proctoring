@@ -1,15 +1,13 @@
 from gaze_tracking import GazeTracking
-from videoProcessing.states import GazeState
+from models.states import GazeState
 
-class GazeDirectionDetectorModel:
+class GazeDetector:
+
     def __init__(self):
         self.gaze = GazeTracking()
 
-    def detect_direction(self, frame):
+    def detect(self, frame):
         self.gaze.refresh(frame)
-
-        if self.gaze.is_blinking():
-            return GazeState.UNKNOWN
 
         if self.gaze.is_right():
             return GazeState.RIGHT
@@ -18,6 +16,6 @@ class GazeDirectionDetectorModel:
             return GazeState.LEFT
 
         if self.gaze.is_center():
-            return GazeState.FORWARD
+            return GazeState.CENTER
 
         return GazeState.UNKNOWN
