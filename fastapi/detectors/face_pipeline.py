@@ -2,7 +2,6 @@ from detectors.face_landmarker import FaceLandmarkDetector
 from detectors.head_pose import HeadPoseDetector
 from detectors.mouth_detector import MouthStateDetector
 
-
 class FacePipeline:
     def __init__(self, model):
         self.landmarks = FaceLandmarkDetector(model)

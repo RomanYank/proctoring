@@ -4,15 +4,10 @@ import logging
 import re
 from datetime import datetime, timezone
 from pathlib import Path
-
 import cv2
 
 logger = logging.getLogger(__name__)
-
-
 class EventLogger:
-    """Сохраняет события нарушений и делает подпись на кадре."""
-
     def __init__(self, output_dir=None, session_name=None, duplicate_cooldown_seconds=8):
         self.events = []
         if output_dir is None:

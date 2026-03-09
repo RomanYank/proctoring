@@ -1,10 +1,7 @@
 from collections import deque
-
 from models.states import HeadState
 
-
 class HeadPoseDetector:
-    """Преобразует 3D-координаты лицевых ориентиров в устойчивые состояния позы головы."""
     NOSE_TIP = 1
     LEFT_EYE = 33
     RIGHT_EYE = 263
@@ -58,7 +55,6 @@ class HeadPoseDetector:
         return HeadState.FORWARD
 
     def detect(self, landmarks):
-        """Принимает список лицевых ориентиров, обновляет историю позы головы и возвращает устойчивое состояние позы головы."""
         if not landmarks:
             return HeadState.UNKNOWN
 

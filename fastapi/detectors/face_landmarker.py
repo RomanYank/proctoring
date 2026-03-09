@@ -2,7 +2,6 @@ import cv2
 import mediapipe as mp
 from mediapipe.tasks.python import vision
 
-
 class FaceLandmarkDetector:
 
     def __init__(self, model_path):

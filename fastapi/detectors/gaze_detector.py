@@ -1,8 +1,6 @@
 from collections import deque
-
 from gaze_tracking import GazeTracking
 from models.states import GazeState
-
 
 class GazeDetector:
     def __init__(self, left_threshold=0.86, right_threshold=0.14, window_size=10, min_votes=7):
