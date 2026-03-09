@@ -2,12 +2,10 @@ import base64
 import re
 from datetime import datetime
 from pathlib import Path
-
 import cv2
 
-
 class EventLogger:
-    """Сохраняет события нарушений и делает подпись на кадре без масок."""
+    """Сохраняет события нарушений и делает подпись на кадре."""
 
     def __init__(self, output_dir=None):
         self.events = []
@@ -22,7 +20,7 @@ class EventLogger:
         return re.sub(r"[^a-zA-Z0-9_-]+", "_", text).strip("_").lower() or "violation"
 
     def _apply_face_mask(self, frame, face_landmarks):
-        """Возвращает копию кадра без изменений лица."""
+        """Возвращает копию кадра."""
         return frame
 
     def _build_screenshot(self, frame, event, event_time, face_landmarks):

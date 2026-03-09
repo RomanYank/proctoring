@@ -5,7 +5,7 @@ from models.states import GazeState
 
 
 class GazeDetector:
-    """Следит за положением зрачков и возвращает сглаженное состояние взгляда."""
+    """Преобразует данные из gaze_tracking в устойчивые состояния направления взгляда."""
 
     def __init__(self, left_threshold=0.75, right_threshold=0.25, window_size=6, min_votes=4):
         self.gaze = GazeTracking()
@@ -25,7 +25,7 @@ class GazeDetector:
         return GazeState.CENTER
 
     def detect(self, frame):
-        """Обновляет кадр и возвращает текущий стабилизированный GazeState."""
+        """Принимает кадр, обновляет данные о взгляде и возвращает устойчивое состояние направления взгляда."""
         self.gaze.refresh(frame)
         state = self._raw_detect()
         self.history.append(state)

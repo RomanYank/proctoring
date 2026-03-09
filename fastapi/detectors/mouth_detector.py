@@ -3,6 +3,7 @@ from collections import deque
 from models.states import MouthState
 
 class MouthStateDetector:
+    """Преобразует 3D-координаты лицевых ориентиров в устойчивые состояния открытости рта."""
 
     UPPER_LIP = 13
     LOWER_LIP = 14

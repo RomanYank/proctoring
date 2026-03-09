@@ -4,7 +4,7 @@ from models.states import HeadState
 
 
 class HeadPoseDetector:
-    """Преобразует координаты MediaPipe в устойчивые состояния направления головы."""
+    """Преобразует 3D-координаты лицевых ориентиров в устойчивые состояния позы головы."""
     NOSE_TIP = 1
     LEFT_EYE = 33
     RIGHT_EYE = 263
@@ -51,14 +51,14 @@ class HeadPoseDetector:
             return HeadState.LEFT
         if horizontal_offset <= -self.horizontal_threshold:
             return HeadState.RIGHT
-        if vertical_offset <= self.up_threshold:
+        if vertical_offset <= -self.up_threshold:
             return HeadState.UP
         if vertical_offset >= self.down_threshold:
             return HeadState.DOWN
         return HeadState.FORWARD
 
     def detect(self, landmarks):
-        """Возвращает доминантный HeadState после накопления последних кадров."""
+        """Принимает список лицевых ориентиров, обновляет историю позы головы и возвращает устойчивое состояние позы головы."""
         if not landmarks:
             return HeadState.UNKNOWN
 

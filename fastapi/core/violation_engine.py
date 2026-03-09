@@ -1,8 +1,8 @@
 class ViolationEngine:
-    """Translate aggregated detection data into named violations with simple thresholds."""
+    """Определяет нарушения на основе данных о взгляде, голове и объектах."""
 
     def detect(self, data):
-        """Return violations only when relevant states exceed their filters."""
+        """Принимает словарь с ключами "gaze", "mouth", "head", "objects" и возвращает список строк с описанием нарушений."""
         violations = []
 
         gaze_state = data.get("gaze")
