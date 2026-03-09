@@ -5,7 +5,9 @@ from fastapi import FastAPI, UploadFile, File
 from models.ObjectDetectionModel import ObjectDetectionModel
 from models.GazeDirectionDetectorModel import GazeDirectionDetectorModel
 from videoProcessing.face_pipeline import FacePipeline
-from videoProcessing.states import ObjectState, HeadState, GazeState
+from videoProcessing.states import ObjectState, HeadState, GazeState, MouthState
+from violations.violation_logger import ViolationLogger
+from filters.gaze_filter import GazeFilter
 
 SAVE_DIR = "data/videos"
 os.makedirs(SAVE_DIR, exist_ok=True)
@@ -37,6 +39,9 @@ async def analyze_video(video: UploadFile = File(...)):
     violations = []
     frame_index = 0
 
+    logger = ViolationLogger()
+    gaze_filter = GazeFilter()
+
     while True:
 
         ret, frame = cap.read()
@@ -44,47 +49,82 @@ async def analyze_video(video: UploadFile = File(...)):
         if not ret:
             break
 
-        timestamp_sec = round(frame_index / frame_rate, 2)
-        mm_ss_time = f"{int(timestamp_sec // 60):02}:{int(timestamp_sec % 60):02}"
+        if frame_index % 5 != 0:
+            frame_index += 1
+            continue
 
+        timestamp_sec = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000
+        mm_ss_time = f"{int(timestamp_sec // 60):02}:{int(timestamp_sec % 60):02}"
         face_data = face_pipeline.process(frame)
 
-        if face_data.head != HeadState.FORWARD and face_data.head != HeadState.UNKNOWN:
-            violations.append({
-                "time": mm_ss_time,
-                "violation": f"Отклонение головы ({face_data.head.value})"
-            })
+        if face_data.head not in [HeadState.FORWARD, HeadState.UNKNOWN]:
 
-        gaze_state = gaze_model.detect_direction(frame)
+            logger.log(
+                violations,
+                mm_ss_time,
+                "head",
+                f"Отклонение головы ({face_data.head.value})"
+            )
 
-        if gaze_state in [GazeState.LEFT, GazeState.RIGHT]:
-            violations.append({
-                "time": mm_ss_time,
-                "violation": f"Смотрит в сторону ({gaze_state.value})"
-            })
+        if face_data.mouth == MouthState.OPEN:
+
+            mouth_counter += 1
+
+            if mouth_counter > 10:
+
+                logger.log(
+                    violations,
+                    mm_ss_time,
+                    "talking",
+                    "Возможный разговор"
+                )
+
+        else:
+            mouth_counter = 0
+
+        if face_data.head == HeadState.FORWARD:
+
+            gaze_state = gaze_model.detect_direction(frame)
+            gaze_state = gaze_filter.update(gaze_state)
+
+            if gaze_state in [GazeState.LEFT, GazeState.RIGHT]:
+
+                logger.log(
+                    violations,
+                    mm_ss_time,
+                    "gaze",
+                    f"Смотрит в сторону ({gaze_state.value})"
+                )
 
         detections, _ = object_model.detect_objects(frame)
         person_count = detections.count(ObjectState.PERSON)
 
         if person_count > 1:
-            violations.append({
-                "time": mm_ss_time,
-                "violation": "В кадре больше одного человека"
-            })
+
+            logger.log(
+                violations,
+                mm_ss_time,
+                "person",
+                "В кадре больше одного человека"
+            )
 
         if ObjectState.PHONE in detections:
-            violations.append({
-                "time": mm_ss_time,
-                "violation": "Использование телефона"
-            })
+
+            logger.log(
+                violations,
+                mm_ss_time,
+                "phone",
+                "Использование телефона"
+            )
 
         if ObjectState.BOOK in detections:
-            violations.append({
-                "time": mm_ss_time,
-                "violation": "Использование книги"
-            })
 
-        frame_index += 1
+            logger.log(
+                violations,
+                mm_ss_time,
+                "book",
+                "Использование книги"
+            )
 
     cap.release()
     face_pipeline.close()
