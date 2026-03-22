@@ -23,14 +23,14 @@ def analyze_video(path):
     # Видео уже сжато на фронтенде в actionUpload
     # поэтому используем исходный путь напрямую
     processed_video_path = str(video_path)
-    
+
     face = FacePipeline(str(face_model))
     gaze = GazeDetector()
     obj = ObjectDetector(str(yolo_model))
     processor = FrameProcessor(face, gaze, obj)
     engine = ViolationEngine()
     event_logger = EventLogger(output_dir=violations_dir, session_name=video_path.stem)
-    
+
     cap = cv2.VideoCapture(processed_video_path)
     frame_index = 0
 
@@ -43,13 +43,13 @@ def analyze_video(path):
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         logger.info(f"Video info: {total_frames} frames at {fps} fps, resolution: {width}x{height}")
-        
+
         if total_frames == 0:
             logger.warning("Video has no frames!")
             return []
-        
+
         processed_frames = 0
-        
+
         while True:
             ret, frame = cap.read()
             if not ret:
@@ -67,11 +67,11 @@ def analyze_video(path):
             # Обрабатываем кадр
             try:
                 data = processor.process(frame)
-                
+
                 logger.debug(f"Frame {frame_index}: gaze={data.get('gaze')}, head={data.get('head')}, mouth={data.get('mouth')}, objects={len(data.get('objects', []))}")
-                
+
                 events = engine.detect(data)
-                
+
                 for event in events:
                     event_logger.add(
                         mmss,
@@ -81,16 +81,16 @@ def analyze_video(path):
                         second_bucket=second_bucket,
                     )
                     logger.info(f"Violation detected at {mmss}: {event}")
-                    
+
             except Exception as e:
                 logger.exception(f"Error processing frame {frame_index}: {e}")
 
             frame_index += 1
             processed_frames += 1
-            
+
             if frame_index % 50 == 0:
                 logger.debug(f"Processed {processed_frames}/{total_frames//2} frames (every 2nd frame)")
-                
+
     finally:
         cap.release()
 
@@ -99,6 +99,5 @@ def analyze_video(path):
         f"Analysis completed for {video_path.name}: {len(result)} violations detected, "
         f"processed {processed_frames} frames out of {total_frames}"
     )
-    return result
-    )
+
     return result
