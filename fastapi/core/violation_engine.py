@@ -65,29 +65,29 @@ class ViolationEngine:
         gaze_state = data.get("gaze")
         head_state = data.get("head")
     
-        logger.debug(f"ViolationEngine input: gaze={gaze_state}, head={head_state}, mouth={data.get('mouth')}, objects={len(data.get('objects', []))}")
-    
         looking_away_active = (
             gaze_state is not None
             and gaze_state != GazeState.UNKNOWN
             and gaze_state in [GazeState.LEFT, GazeState.RIGHT]
+            and head_state is not None
+            and head_state == HeadState.FORWARD
         )
         
         if self._update_streak("looking_away", looking_away_active, self.looking_away_frames):
             direction = "влево" if gaze_state == GazeState.LEFT else "вправо"
             violations.append("Looking away")
-            logger.info(f"Violation: Looking {direction}")
+            logger.debug(f"Violation: Looking {direction}")
 
 
         mouth_state = data.get("mouth")
         if mouth_state and mouth_state == MouthState.OPEN:
             violations.append("Mouth open")
-            logger.info("Violation: Mouth open (possible talking)")
+            logger.debug("Violation: Mouth open (possible talking)")
 
         if head_state and head_state in [HeadState.LEFT, HeadState.RIGHT, HeadState.DOWN, HeadState.UP]:
             direction = head_state.value
             violations.append(f"Head turned {direction}")
-            logger.info(f"Violation: Head turned {direction}")
+            logger.debug(f"Violation: Head turned {direction}")
 
 
         object_detections = [obj for obj in data.get("objects", []) if obj.get("state")]
@@ -95,7 +95,7 @@ class ViolationEngine:
         
         if any(value == "phone" for value in object_values):
             violations.append("Phone detected")
-            logger.info("Violation: Phone detected")
+            logger.debug("Violation: Phone detected")
 
         person_detections = [
             obj for obj in object_detections
@@ -105,7 +105,6 @@ class ViolationEngine:
         multiple_persons_active = len(person_detections) > 1
         if self._update_streak("multiple_persons", multiple_persons_active, self.multiple_person_frames):
             violations.append("Multiple persons detected")
-            logger.info(f"Violation: Multiple persons detected ({len(person_detections)} persons)")
+            logger.debug(f"Violation: Multiple persons detected ({len(person_detections)} persons)")
 
-        logger.debug(f"Detected violations: {violations}")
         return violations

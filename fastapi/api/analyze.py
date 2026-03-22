@@ -55,8 +55,8 @@ def analyze_video(path):
             if not ret:
                 break
 
-            # Обрабатываем каждый второй кадр для оптимизации
-            if frame_index % 2 != 0:
+            # Обрабатываем каждый пятый кадр для оптимизации
+            if frame_index % 5 != 0:
                 frame_index += 1
                 continue
 
@@ -67,9 +67,6 @@ def analyze_video(path):
             # Обрабатываем кадр
             try:
                 data = processor.process(frame)
-
-                logger.debug(f"Frame {frame_index}: gaze={data.get('gaze')}, head={data.get('head')}, mouth={data.get('mouth')}, objects={len(data.get('objects', []))}")
-
                 events = engine.detect(data)
 
                 for event in events:
@@ -80,24 +77,24 @@ def analyze_video(path):
                         data.get("face_landmarks"),
                         second_bucket=second_bucket,
                     )
-                    logger.info(f"Violation detected at {mmss}: {event}")
-
+                    logger.debug(f"Violation detected at {mmss}: {event}")
+                    
             except Exception as e:
                 logger.exception(f"Error processing frame {frame_index}: {e}")
 
             frame_index += 1
-            processed_frames += 1
-
+            
             if frame_index % 50 == 0:
-                logger.debug(f"Processed {processed_frames}/{total_frames//2} frames (every 2nd frame)")
-
+                logger.debug(f"Processed {frame_index}/{total_frames} frames")
+                
     finally:
         cap.release()
 
     result = event_logger.result()
     logger.info(
-        f"Analysis completed for {video_path.name}: {len(result)} violations detected, "
-        f"processed {processed_frames} frames out of {total_frames}"
+        "Analysis completed for %s: %s violations detected, output=%s",
+        video_path.name,
+        len(result),
+        event_logger.output_dir,
     )
-
     return result

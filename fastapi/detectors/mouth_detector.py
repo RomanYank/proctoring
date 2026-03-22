@@ -19,7 +19,7 @@ class MouthStateDetector:
     MOUTH_LEFT = 61       # Left mouth corner
     MOUTH_RIGHT = 291     # Right mouth corner
 
-    def __init__(self, threshold=0.08, window=3):
+    def __init__(self, threshold=0.15, window=5):
         self.threshold = threshold
         self.history = deque(maxlen=window)
 
@@ -69,8 +69,6 @@ class MouthStateDetector:
             
             is_open = ratio > self.threshold
             self.history.append(is_open)
-            
-            logger.debug(f"Mouth detection: distance={mouth_distance:.3f}, face_scale={face_scale:.3f}, ratio={ratio:.3f}, threshold={self.threshold}, is_open={is_open}")
             
             if sum(self.history) > len(self.history) / 2:
                 return MouthState.OPEN
