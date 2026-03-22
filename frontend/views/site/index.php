@@ -220,6 +220,10 @@ $(function() {
     var secondsLeft = recordingSeconds;
     var currentQuestionIndex = 0;
 
+    var webcamCanvas = null;
+    var webcamCanvasCtx = null;
+    var webcamCanvasStream = null;
+
     function switchStep(stepNumber) {
         $stepNames.each(function(idx) {
             $(this).toggleClass('active', idx === stepNumber - 1);
@@ -331,6 +335,36 @@ $(function() {
         return recorder;
     }
 
+    function setupWebcamCanvas() {
+        var targetWidth = 640;
+        var targetHeight = 480;
+
+        webcamCanvas = document.createElement('canvas');
+        webcamCanvas.width = targetWidth;
+        webcamCanvas.height = targetHeight;
+        webcamCanvas.style.display = 'none';
+        
+        webcamCanvasCtx = webcamCanvas.getContext('2d');
+
+        webcamCanvasStream = webcamCanvas.captureStream(15); // 15 FPS
+
+        return webcamCanvasStream;
+    }
+
+    function drawWebcamFrameToCanvas() {
+        if (!webcamCanvas || !webcamCanvasCtx || !webcamStream) {
+            return;
+        }
+
+        try {
+            webcamCanvasCtx.drawImage(webcamPreview, 0, 0, webcamCanvas.width, webcamCanvas.height);
+        } catch (e) {
+            console.log(e);
+        }
+
+        requestAnimationFrame(drawWebcamFrameToCanvas);
+    }
+
     function getFileName(prefix, ext) {
         var d = new Date();
         var stamp = '' + d.getUTCFullYear() + String(d.getUTCMonth() + 1).padStart(2, '0') + String(d.getUTCDate()).padStart(2, '0') + String(d.getUTCHours()).padStart(2, '0') + String(d.getUTCMinutes()).padStart(2, '0') + String(d.getUTCSeconds()).padStart(2, '0');
@@ -407,9 +441,13 @@ $(function() {
         webcamPreview.srcObject = webcamStream;
         screenPreview.srcObject = screenStream;
 
-        webcamRecorder = createRecorder(webcamStream, function(chunk) {
+        var canvasStream = setupWebcamCanvas();
+        drawWebcamFrameToCanvas();
+
+        webcamRecorder = createRecorder(canvasStream, function(chunk) {
             webcamChunks.push(chunk);
         });
+
         screenRecorder = createRecorder(screenStream, function(chunk) {
             screenChunks.push(chunk);
         });

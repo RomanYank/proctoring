@@ -20,6 +20,7 @@ use frontend\models\ContactForm;
 use common\models\VideoFiles;
 use yii\web\UploadedFile;
 use common\jobs\AnalyzeJob;
+use frontend\components\VideoCompressor;
 
 /**
  * Site controller
@@ -322,6 +323,29 @@ class SiteController extends Controller
                 } else {
                     throw new \Exception('Problem saving file: ' . $file->tempName);
                 }
+            }
+
+            try {
+                $compressor = new VideoCompressor([
+                    'targetHeight' => 480,
+                    'targetFps' => 15,
+                    'quality' => 28,
+                ]);
+
+                $compressedPath = $uploadPath . DIRECTORY_SEPARATOR . 'compressed-' . $fileName . '.mp4';
+                
+                Yii::info("Начинаем сжатие видео: {$savePath}");
+                $result = $compressor->compress($savePath, $compressedPath);
+                
+                Yii::info("Сжатие завершено: " . json_encode($result));
+                
+                if (file_exists($compressedPath)) {
+                    unlink($savePath);
+                    rename($compressedPath, $savePath);
+                    Yii::info("Видео успешно сжато и заменено");
+                }
+            } catch (\Throwable $e) {
+                Yii::warning("Ошибка при сжатии видео: {$e->getMessage()}");
             }
 
             return 'success';

@@ -1,4 +1,14 @@
+import logging
+from models.states import GazeState, HeadState, MouthState
+
+logger = logging.getLogger(__name__)
+
+
 class ViolationEngine:
+    """
+    Анализирует данные от детекторов и определяет нарушения прокторинга.
+    """
+    
     def __init__(
         self,
         looking_away_frames=3,
@@ -54,34 +64,47 @@ class ViolationEngine:
 
         gaze_state = data.get("gaze")
         head_state = data.get("head")
+    
         looking_away_active = (
             gaze_state is not None
-            and gaze_state.value in ["left", "right"]
+            and gaze_state != GazeState.UNKNOWN
+            and gaze_state in [GazeState.LEFT, GazeState.RIGHT]
             and head_state is not None
-            and head_state.value == "forward"
+            and head_state == HeadState.FORWARD
         )
+        
         if self._update_streak("looking_away", looking_away_active, self.looking_away_frames):
+            direction = "влево" if gaze_state == GazeState.LEFT else "вправо"
             violations.append("Looking away")
+            logger.debug(f"Violation: Looking {direction}")
+
 
         mouth_state = data.get("mouth")
-        if mouth_state and mouth_state.value == "open":
+        if mouth_state and mouth_state == MouthState.OPEN:
             violations.append("Mouth open")
+            logger.debug("Violation: Mouth open (possible talking)")
 
-        if head_state and head_state.value in ["left", "right", "down", "up"]:
-            violations.append(f"Head turned {head_state.value}")
+        if head_state and head_state in [HeadState.LEFT, HeadState.RIGHT, HeadState.DOWN, HeadState.UP]:
+            direction = head_state.value
+            violations.append(f"Head turned {direction}")
+            logger.debug(f"Violation: Head turned {direction}")
+
 
         object_detections = [obj for obj in data.get("objects", []) if obj.get("state")]
         object_values = [obj["state"].value for obj in object_detections]
+        
+        if any(value == "phone" for value in object_values):
+            violations.append("Phone detected")
+            logger.debug("Violation: Phone detected")
+
         person_detections = [
             obj for obj in object_detections
             if obj["state"].value == "person" and self._is_valid_extra_person(obj)
         ]
 
-        if any(value == "phone" for value in object_values):
-            violations.append("Phone detected")
-
         multiple_persons_active = len(person_detections) > 1
         if self._update_streak("multiple_persons", multiple_persons_active, self.multiple_person_frames):
             violations.append("Multiple persons detected")
+            logger.debug(f"Violation: Multiple persons detected ({len(person_detections)} persons)")
 
         return violations

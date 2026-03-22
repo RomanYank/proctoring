@@ -1,8 +1,13 @@
 FROM php:8.1-fpm
 
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git \
-    && docker-php-ext-install pdo pdo_mysql zip
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    ffmpeg \
+    && docker-php-ext-install pdo pdo_mysql zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www
 
