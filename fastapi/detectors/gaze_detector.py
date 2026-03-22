@@ -3,7 +3,7 @@ from gaze_tracking import GazeTracking
 from models.states import GazeState
 
 class GazeDetector:
-    def __init__(self, left_threshold=0.86, right_threshold=0.14, window_size=10, min_votes=7):
+    def __init__(self, left_threshold=0.65, right_threshold=0.35, window_size=10, min_votes=5):
         self.gaze = GazeTracking()
         self.left_threshold = left_threshold
         self.right_threshold = right_threshold
@@ -14,10 +14,13 @@ class GazeDetector:
         ratio = self.gaze.horizontal_ratio()
         if ratio is None:
             return GazeState.UNKNOWN
+
         if ratio >= self.left_threshold:
             return GazeState.LEFT
+
         if ratio <= self.right_threshold:
             return GazeState.RIGHT
+
         return GazeState.CENTER
 
     def detect(self, frame):

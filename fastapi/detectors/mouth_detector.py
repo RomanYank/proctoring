@@ -8,7 +8,7 @@ class MouthStateDetector:
     LEFT_EYE = 33
     RIGHT_EYE = 263
 
-    def __init__(self, threshold=0.25, window=5):
+    def __init__(self, threshold=0.06, window=5):
         self.threshold = threshold
         self.history = deque(maxlen=window)
 
