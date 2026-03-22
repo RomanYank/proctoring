@@ -28,7 +28,7 @@ class GazeDetector:
     LEFT_IRIS = [468, 469, 470, 471, 472]
     RIGHT_IRIS = [473, 474, 475, 476, 477]
 
-    def __init__(self, left_threshold=0.35, right_threshold=0.65, window_size=10, min_votes=6):
+    def __init__(self, left_threshold=0.25, right_threshold=0.75, window_size=5, min_votes=3):
         """
         Инициализирует детектор взгляда.
         

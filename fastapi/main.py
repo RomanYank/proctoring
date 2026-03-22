@@ -4,6 +4,11 @@ from pathlib import Path
 import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from api.analyze import analyze_video
+from core.frame_processor import FrameProcessor
+from core.violation_engine import ViolationEngine
+from detectors.face_pipeline import FacePipeline
+from detectors.gaze_detector import GazeDetector
+from detectors.object_detector import ObjectDetector
 
 logging.basicConfig(
     level=logging.INFO,
@@ -12,11 +17,45 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
-
-BASE_DIR = Path(__file__).resolve().parent
-SAVE_DIR = BASE_DIR / "data" / "videos"
-SAVE_DIR.mkdir(parents=True, exist_ok=True)
+@app.post("/test/")
+async def test_detection():
+    """
+    Тестовый эндпоинт для проверки работы детекторов
+    """
+    try:
+        # Создаем тестовый кадр (просто черный квадрат)
+        import numpy as np
+        test_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        
+        # Инициализируем детекторы
+        base_dir = Path(__file__).resolve().parent
+        face_model = base_dir / "models" / "face_landmarker.task"
+        yolo_model = base_dir / "yolov8n.pt"
+        
+        face = FacePipeline(str(face_model))
+        gaze = GazeDetector()
+        obj = ObjectDetector(str(yolo_model))
+        processor = FrameProcessor(face, gaze, obj)
+        engine = ViolationEngine()
+        
+        # Обрабатываем тестовый кадр
+        data = processor.process(test_frame)
+        events = engine.detect(data)
+        
+        return {
+            "test_frame_processed": True,
+            "detector_data": {
+                "gaze": str(data.get("gaze")),
+                "head": str(data.get("head")),
+                "mouth": str(data.get("mouth")),
+                "objects_count": len(data.get("objects", []))
+            },
+            "violations": events
+        }
+        
+    except Exception as e:
+        logger.exception(f"Test failed: {e}")
+        return {"error": str(e)}
 
 @app.post("/analyze/")
 async def analyze(video: UploadFile = File(...)):
